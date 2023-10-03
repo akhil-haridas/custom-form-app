@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 // Configure Morgan middleware for logging
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 connectToDatabase();
 
