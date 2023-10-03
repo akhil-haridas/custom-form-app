@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import CancelSave from "../components/CancelSave/CancelSave";
-import SelectInput from "../components/Select/SelectInput";
-import InputField from "../components/InputField/InputField";
-import RadioButton from "../components/Radio/RadioButton";
-import CheckBox from "../components/CheckBox/CheckBox";
+import CancelSave from "../../components/CancelSave/CancelSave";
+import SelectInput from "../../components/Select/SelectInput";
+import InputField from "../../components/InputField/InputField";
+import RadioButton from "../../components/Radio/RadioButton";
+import CheckBox from "../../components/CheckBox/CheckBox";
 
 const roleOptions = [
   { value: "fullstack", label: "Full-stack Developer" },

@@ -1,9 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import NotFound from "../pages/NotFound";
-const HomePage = React.lazy(() => import("../pages/HomePage"));
-const FormPage = React.lazy(() => import("../pages/FormPage"));
-
+import NotFound from "../pages/User/NotFound";
+const HomePage = React.lazy(() => import("../pages/User/HomePage"));
+const FormPage = React.lazy(() => import("../pages/User/FormPage"));
 
 const ProjectRoutes = () => {
   return (
