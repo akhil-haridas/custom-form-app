@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL = "https://custom-form-app.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
