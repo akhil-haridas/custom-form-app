@@ -22,6 +22,7 @@ const CreatePage = () => {
       fields: documents,
     };
 
+    console.log("handleFormSubmit");
     try {
       // Call the createForm function to send formData to the server
       const response = await createForm(formData);

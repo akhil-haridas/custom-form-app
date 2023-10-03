@@ -38,6 +38,7 @@ const Toast = Swal.mixin({
 });
 
 export const createForm = async (formData) => {
+  console.log("HEY")
   try {
     const response = await api.post("/admin/create", formData, {
       headers: {

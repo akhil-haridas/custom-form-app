@@ -8,8 +8,8 @@ const Footer = () => {
           <div className="col-lg-6 col-md-12">
             <p>
               Copyrights © 2023 -{" "}
-              <Link to="https://github.com/akhil-haridas/Image-Management">
-                Image Management App
+              <Link to="https://github.com/akhil-haridas/custom-form-app">
+                Custom Form App
               </Link>
               , All Rights Reserved.
               <br />
