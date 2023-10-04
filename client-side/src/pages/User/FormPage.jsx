@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createResponse, getForm } from "../../utils/axios";
+import { getForm } from "../../utils/axios";
 import CancelSave from "../../components/CancelSave/CancelSave";
 import SelectInput from "../../components/Select/SelectInput";
 import InputField from "../../components/InputField/InputField";
 import RadioButton from "../../components/Radio/RadioButton";
 import CheckBox from "../../components/CheckBox/CheckBox";
 import Spinner from "../../components/Fallback/Spinner";
+import {
+  validateField,
+  validateFields,
+  submitForm,
+} from "../../utils/validate";
 
 const FormPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(null);
-  const [formValues, setFormValues] = useState({}); 
+  const [formValues, setFormValues] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     async function fetchFormData() {
@@ -32,6 +38,7 @@ const FormPage = () => {
       ...formValues,
       [fieldId]: value,
     });
+    validateField(formData, fieldId, value, fieldErrors, setFieldErrors);
   };
 
   const handleCheckBoxChange = (fieldId, selectedValue, isChecked) => {
@@ -49,29 +56,34 @@ const FormPage = () => {
       ...formValues,
       [fieldId]: newSelectedValues,
     });
+
+    validateField(
+      formData,
+      fieldId,
+      newSelectedValues,
+      fieldErrors,
+      setFieldErrors
+    );
   };
 
   const renderFormField = (field) => {
     const fieldId = field._id;
 
-    switch (field.fieldType) {
-      case "text":
-        return (
+    return (
+      <div key={fieldId} className="mb-4">
+        {field.fieldType === "text" && (
           <InputField
-            key={fieldId}
             id={fieldId}
             label={field.question}
             placeholder={field.placeHolder || ""}
             value={formValues[fieldId] || ""}
             required={field.isRequired}
-            message=""
+            message={fieldErrors[fieldId]}
             onChange={(value) => handleInputChange(fieldId, value)}
           />
-        );
-      case "radio":
-        return (
+        )}
+        {field.fieldType === "radio" && (
           <RadioButton
-            key={fieldId}
             id={fieldId}
             name={fieldId}
             labels={field.options}
@@ -81,12 +93,11 @@ const FormPage = () => {
             onChange={(selectedValue) =>
               handleInputChange(fieldId, selectedValue)
             }
+            message={fieldErrors[fieldId]}
           />
-        );
-      case "select":
-        return (
+        )}
+        {field.fieldType === "select" && (
           <SelectInput
-            key={fieldId}
             label={field.question}
             placeholder="Select an option"
             options={field.options.map((option, index) => ({
@@ -99,10 +110,10 @@ const FormPage = () => {
             name={fieldId}
             value={formValues[fieldId] || ""}
             onChange={(value) => handleInputChange(fieldId, value)}
+            message={fieldErrors[fieldId]}
           />
-        );
-      case "checkbox":
-        return (
+        )}
+        {field.fieldType === "checkbox" && (
           <CheckBox
             id={fieldId}
             labels={field.options}
@@ -112,43 +123,31 @@ const FormPage = () => {
             onChange={(selectedValue, isChecked) =>
               handleCheckBoxChange(fieldId, selectedValue, isChecked)
             }
+            message={fieldErrors[fieldId]}
           />
-        );
-      default:
-        return null;
-    }
+        )}
+      </div>
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await createResponse({
-        formId: formData._id, 
-        fields: Object.keys(formValues).map((fieldId) => ({
-          fieldType: formData.fields.find((field) => field._id === fieldId)
-            .fieldType,
-          label: formData.fields.find((field) => field._id === fieldId)
-            .question,
-          response: formValues[fieldId],
-        })),
-      });
-      console.log("Server Response:", response);
-      navigate("/");
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    if (!validateFields(formData, formValues, setFieldErrors)) {
+      return;
     }
+    submitForm(formData, formValues, navigate);
   };
 
-
   const handleCancel = (e) => {
-    e.preventDefault()
-    navigate('/forms')
-  }
+    e.preventDefault();
+    navigate("/");
+  };
+
   return (
     <div>
       {formData ? (
-        <div className="flex flex-col bg-gray-300">
+        <div className="flex flex-col bg-gray-300 h-[100vh]">
           <div className="h-72 bg-teal-500 sm:h-[122px]" />
           <div className="mx-auto w-[700px] sm:w-[90%]">
             <div className="ctrlqFormCard mt-[-180px]">
@@ -170,7 +169,7 @@ const FormPage = () => {
 
                   <CancelSave
                     onCancel={handleCancel}
-                    onSave={handleSubmit} 
+                    onSave={handleSubmit}
                     cancelLabel="Cancel"
                     saveLabel="Save"
                   />

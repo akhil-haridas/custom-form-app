@@ -10,13 +10,16 @@ const SelectInput = ({
   name,
   value,
   onChange,
-  required
+  message,
+  required,
 }) => {
+  const color = message ? "red" : "blue"; 
+
   return (
     <div className="mb-6">
       <label
-        for="username-error"
-        class="block mb-2 text-sm font-medium text-blue-700 dark:text-blue-500"
+        htmlFor={id}
+        className={`block mb-2 text-sm font-medium text-${color}-700 dark:text-${color}-500`}
       >
         <p className="inline">{label}</p>
         {required && <p className="inline text-red-600">*</p>}
@@ -31,6 +34,11 @@ const SelectInput = ({
         value={value}
         onChange={onChange}
       />
+      {message && (
+        <p className={`mt-2 text-sm text-${color}-600 dark:text-${color}-500`}>
+          <span className="font-medium">{message}</span>
+        </p>
+      )}
     </div>
   );
 };

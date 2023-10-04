@@ -17,7 +17,7 @@ const Table = ({ datas }) => {
               <th>Form Title</th>
               <th>Description</th>
               <th>Responses</th>
-              <th>Go to form</th>
+              <th>Link</th>
             </tr>
           </thead>
           <tbody>
@@ -42,10 +42,10 @@ const Table = ({ datas }) => {
                   {form.responseCount}
                 </td>
                 <td
-                  className="cursor-pointer"
+                  className="cursor-pointer text-blue-800 underline"
                   onClick={() => navigate(`/forms/${form._id}`)}
                 >
-                  Link
+                  Click
                 </td>
               </tr>
             ))}

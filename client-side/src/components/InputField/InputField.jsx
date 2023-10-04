@@ -5,16 +5,15 @@ const InputField = ({
   label,
   placeholder,
   value,
-  error,
-  success,
   message,
   required,
   onChange,
 }) => {
-  const color = success ? "green" : error ? "red" : "blue";
+  const color = message ? "red" : "blue";
   const inputClasses = `border border-${color}-500 text-${color}-900 placeholder-${color}-700 text-sm rounded-lg focus:ring-${color}-500 focus:border-${color}-500 block w-full p-2.5 dark:bg-${color}-100 dark:border-${color}-400`;
 
   const handleInputChange = (event) => {
+    event.preventDefault()
     onChange(event.target.value);
   };
 
@@ -33,12 +32,11 @@ const InputField = ({
         className={inputClasses}
         placeholder={placeholder}
         value={value}
-        onChange={handleInputChange} // Handle input changes
+        onChange={handleInputChange} 
       />
-      {error && (
+      {message && (
         <p className={`mt-2 text-sm text-${color}-600 dark:text-${color}-500`}>
-          <span className="font-medium">{message}</span>{" "}
-          {success ? "Username available!" : "Username already taken!"}
+          <span className="font-medium">{message}</span>
         </p>
       )}
     </div>

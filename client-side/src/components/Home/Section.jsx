@@ -9,11 +9,11 @@ const Section = () => {
           <div className="col-lg-9 offset-lg-2 text-center">
             <div className="hero-text">
               <div className="hero-text-tablecell">
-                <p className="subtitle">Realtime Innovations</p>
+                <p className="subtitle">Dignizant Technologies LLP</p>
                 <h1>Custom Form App</h1>
                 <div className="hero-btns">
                   <Link to="/admin/forms" className="boxed-btn">
-                    All Forms
+                    List of forms
                   </Link>
                 </div>
               </div>

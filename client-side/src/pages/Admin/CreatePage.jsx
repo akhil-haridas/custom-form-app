@@ -15,35 +15,46 @@ const CreatePage = () => {
     formDescription: "",
   });
 
+  const [formErrors, setFormErrors] = useState({
+    formTitle: "",
+  });
+
   const { formTitle, formDescription } = formData;
 
   const documents = useSelector((state) => state.documents);
   const documentsWithoutIds = documents.map(({ id, ...rest }) => rest);
 
-  const isSubmitDisabled = !formTitle;
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleFormSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    if (documentsWithoutIds.length === 0) {
+      setFormErrors({
+        ...formErrors,
+        formFields: "At least one field is required.",
+      });
+      return;
+    }
+
     const formData = {
       title: formTitle,
       description: formDescription,
       fields: documentsWithoutIds,
     };
 
-    if (!isSubmitDisabled && documentsWithoutIds.length > 0) {
-      try {
-        await createForm(formData);
-        setFormData({
-          formTitle: "",
-          formDescription: "",
-        });
-        dispatch(clearDocuments());
-        navigate('/admin/forms')
-      } catch (error) {
-        console.error("Error creating form:", error);
-      }
+    try {
+      await createForm(formData);
+      setFormData({
+        formTitle: "",
+        formDescription: "",
+      });
+      dispatch(clearDocuments());
+      navigate("/admin/forms");
+    } catch (error) {
+      console.error("Error creating form:", error);
     }
   };
 
@@ -55,9 +66,23 @@ const CreatePage = () => {
     });
   };
 
+  const validateForm = () => {
+    const errors = {};
+
+    if (!formTitle) {
+      errors.formTitle = "Form Title is required.";
+    } else {
+      setFormErrors({ ...formErrors, formTitle: "" });
+    }
+
+    setFormErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
   return (
     <>
-      <Head active={"forms"} />
+      <Head active={"AddForm"} />
       <Breadcrumb current={"ADD NEW FORM"} />
       <div className="mt-10 mb-150 flex items-center justify-center w-full">
         <form className="w-full max-w-[65%]">
@@ -70,7 +95,9 @@ const CreatePage = () => {
                 Form Title
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className={`appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 ${
+                  formErrors.formTitle && "border-red-500"
+                }`}
                 id="formTitle"
                 name="formTitle"
                 placeholder="Enter form title"
@@ -78,6 +105,11 @@ const CreatePage = () => {
                 value={formTitle}
                 onChange={handleInputChange}
               />
+              {formErrors.formTitle && (
+                <p className="text-red-500 text-xs italic">
+                  {formErrors.formTitle}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 mb-6">
@@ -101,7 +133,7 @@ const CreatePage = () => {
           <div className="flex h-full mb-5 pb-5 bg-gray-100">
             <div className="m-auto pt-2 min-w-[75%]">
               <div>
-                <Adding />
+                <Adding formFieldsError={formErrors.formFields} />
                 <Bucket />
               </div>
             </div>
@@ -110,14 +142,11 @@ const CreatePage = () => {
           <div className="md:flex md:items-center">
             <div className="md:w-1/3">
               <button
-                className={`shadow bg-teal-400 ${
-                  isSubmitDisabled ? "cursor-not-allowed" : "hover:bg-teal-400"
-                } focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded`}
+                className={`shadow bg-teal-400 ${"hover:bg-teal-400"} focus:shadow-outline w-[20%] focus:outline-none text-white font-bold py-2 px-4 rounded`}
                 type="button"
                 onClick={handleFormSubmit}
-                disabled={isSubmitDisabled}
               >
-                Save
+                Submit
               </button>
             </div>
             <div className="md:w-2/3" />

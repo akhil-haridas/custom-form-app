@@ -5,7 +5,7 @@ import { addDocument } from "../../redux/slices/documentSlice";
 import { Toast, fieldTypeOptions } from "../../utils/utils";
 import { nanoid } from "nanoid";
 
-const Adding = () => {
+const Adding = ({formFieldsError}) => {
   const dispatch = useDispatch();
 
   const initialState = {
@@ -59,6 +59,9 @@ const Adding = () => {
           <h1 className="inline text-2xl font-semibold leading-none">
             Add Fields
           </h1>
+          {formFieldsError && (
+            <p className="text-red-500 text-xs italic">{formFieldsError}</p>
+          )}
         </div>
       </div>
       <div className="px-5 pb-1">

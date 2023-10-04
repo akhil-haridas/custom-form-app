@@ -25,6 +25,13 @@ const Head = ({ active = "Home" }) => {
                   >
                     <Link to="/admin/forms">Forms</Link>
                   </li>
+                  <li
+                    className={
+                      active === "AddForm" ? `active current-list-item` : ""
+                    }
+                  >
+                    <Link to="/admin/create">Add Form</Link>
+                  </li>
                   <li className="active current-list-item">
                     <Link to="/admin/create">
                       <box-icon name="user" color="#ffffff"></box-icon>
