@@ -1,7 +1,7 @@
 import axios from "axios";
-import Swal from "sweetalert2";
+import { Toast } from "./admin";
 
-const API_BASE_URL = "https://custom-form-app.onrender.com/api";
+const API_BASE_URL = "http://localhost:4000/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -25,20 +25,7 @@ api.interceptors.response.use(
   }
 );
 
-const Toast = Swal.mixin({
-  toast: true,
-  position: "top",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener("mouseenter", Swal.stopTimer);
-    toast.addEventListener("mouseleave", Swal.resumeTimer);
-  },
-});
-
 export const createForm = async (formData) => {
-  console.log("HEY")
   try {
     const response = await api.post("/admin/create", formData, {
       headers: {
@@ -69,7 +56,45 @@ export const getFormDetails = async (formId) => {
   }
 };
 
+export const getForms = async () => {
+  try {
+    const response = await api.get('/admin/forms');
+    return response
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+  }
+};
 
+export const getFormResponses = async (formId) => {
+  try {
+    const response = await api.get(`/admin/forms/${formId}`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching form responses:", error);
+  }
+};
 
+export const getForm = async (formId) => {
+  try {
+    const response = await api.get(`/user/forms/${formId}`);
+    return response;
+  } catch (error) {
+    console.error("Error fetching form details:", error);
+  }
+};
+
+export const createResponse = async (formData) => {
+  try {
+    const response = await api.post("/user/create", formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error creating user response:", error);
+    throw error;
+  }
+};
 
 export default api;

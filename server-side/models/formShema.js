@@ -10,10 +10,13 @@ const formFieldSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  placeHolder: {
+    type: String,
+  },
   options: {
     type: [String],
   },
-  required: {
+  isRequired: {
     type: Boolean,
     default: false,
   },

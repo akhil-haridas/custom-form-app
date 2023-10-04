@@ -1,11 +1,20 @@
 import React from "react";
 
-const RadioButton = ({ id, name, value, labels, checked, onChange ,required,title}) => {
+const RadioButton = ({
+  id,
+  name,
+  value,
+  labels,
+  checkedValue,
+  onChange,
+  required,
+  title,
+}) => {
   return (
     <div className="mb-6">
       <label
-        for="username-error"
-        class="block mb-2 text-sm font-medium text-blue-700 dark:text-blue-500"
+        htmlFor={id}
+        className="block mb-2 text-sm font-medium text-blue-700 dark:text-blue-500"
       >
         <p className="inline">{title}</p>
         {required && <p className="inline text-red-600">*</p>}
@@ -18,8 +27,8 @@ const RadioButton = ({ id, name, value, labels, checked, onChange ,required,titl
             name={name}
             value={label}
             className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600"
-            checked={false}
-            onChange={onChange}
+            checked={checkedValue === label}
+            onChange={() => onChange(label)} 
           />
           <label
             htmlFor={`radio-${index}`}

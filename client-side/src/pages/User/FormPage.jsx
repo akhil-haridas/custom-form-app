@@ -1,139 +1,187 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { createResponse, getForm } from "../../utils/axios";
 import CancelSave from "../../components/CancelSave/CancelSave";
 import SelectInput from "../../components/Select/SelectInput";
 import InputField from "../../components/InputField/InputField";
 import RadioButton from "../../components/Radio/RadioButton";
 import CheckBox from "../../components/CheckBox/CheckBox";
-import { getFormDetails } from "../../utils/axios";
-
-const roleOptions = [
-  { value: "fullstack", label: "Full-stack Developer" },
-  { value: "uiux", label: "UI/UX Designer" },
-  { value: "dataanalyst", label: "Data Analyst" },
-  { value: "softwareengineer", label: "Software Engineer" },
-  { value: "productmanager", label: "Product Manager" },
-];
+import Spinner from "../../components/Fallback/Spinner";
 
 const FormPage = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [formData, setFormData] = useState(null); // State to hold form data
-
-  const fetchFormData = async () => {
-    try {
-      const formId = "651c36e0ace8450160e3ae9e"; // Replace with the actual form ID you want to fetch
-      const formDetails = await getFormDetails(formId);
-      setFormData(formDetails); 
-    } catch (error) {
-      console.error("Error fetching form details:", error);
-    }
-  };
+  const { id } = useParams();
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState(null);
+  const [formValues, setFormValues] = useState({}); 
 
   useEffect(() => {
+    async function fetchFormData() {
+      try {
+        const response = await getForm(id);
+        setFormData(response);
+      } catch (error) {
+        console.error("Error fetching form data:", error);
+      }
+    }
+
     fetchFormData();
-  }, []);
+  }, [id]);
+
+  const handleInputChange = (fieldId, value) => {
+    setFormValues({
+      ...formValues,
+      [fieldId]: value,
+    });
+  };
+
+  const handleCheckBoxChange = (fieldId, selectedValue, isChecked) => {
+    const currentSelectedValues = formValues[fieldId] || [];
+
+    let newSelectedValues;
+    if (isChecked) {
+      newSelectedValues = [...currentSelectedValues, selectedValue];
+    } else {
+      newSelectedValues = currentSelectedValues.filter(
+        (value) => value !== selectedValue
+      );
+    }
+    setFormValues({
+      ...formValues,
+      [fieldId]: newSelectedValues,
+    });
+  };
 
   const renderFormField = (field) => {
+    const fieldId = field._id;
+
     switch (field.fieldType) {
       case "text":
         return (
           <InputField
-            key={field._id}
-            id={`field-${field._id}`}
+            key={fieldId}
+            id={fieldId}
             label={field.question}
-            placeholder={`Enter ${field.question}`}
-            required={field.required}
-            message="Oops!"
-            success={false}
-            error={false}
+            placeholder={field.placeHolder || ""}
+            value={formValues[fieldId] || ""}
+            required={field.isRequired}
+            message=""
+            onChange={(value) => handleInputChange(fieldId, value)}
           />
         );
-
       case "radio":
         return (
           <RadioButton
-            key={field._id}
-            id={`field-${field._id}`}
-            name={`field-${field._id}`}
-            value=""
+            key={fieldId}
+            id={fieldId}
+            name={fieldId}
             labels={field.options}
-            checked={false}
+            checkedValue={formValues[fieldId]}
             title={field.question}
-            required={field.required}
+            required={field.isRequired}
+            onChange={(selectedValue) =>
+              handleInputChange(fieldId, selectedValue)
+            }
           />
         );
-
-      case "checkbox":
-        return (
-          <CheckBox
-            key={field._id}
-            id={`field-${field._id}`}
-            labels={field.options}
-            checked={false} 
-            title={field.question}
-            required={field.required}
-          />
-        );
-
       case "select":
         return (
           <SelectInput
-            key={field._id}
+            key={fieldId}
             label={field.question}
-            placeholder={`Select ${field.question}`}
-            options={field.options.map((option) => ({
-              value: option,
+            placeholder="Select an option"
+            options={field.options.map((option, index) => ({
+              value: index.toString(),
               label: option,
             }))}
-            isSearchable={true}
-            title={field.question}
-            required={field.required}
-            id={`field-${field._id}`}
-            name={`field-${field._id}`}
-            value={selectedOption}
-            onChange={(selectedOption) => setSelectedOption(selectedOption)}
+            isSearchable={false}
+            required={field.isRequired}
+            id={fieldId}
+            name={fieldId}
+            value={formValues[fieldId] || ""}
+            onChange={(value) => handleInputChange(fieldId, value)}
           />
         );
-
+      case "checkbox":
+        return (
+          <CheckBox
+            id={fieldId}
+            labels={field.options}
+            selectedValues={formValues[fieldId] || []}
+            title={field.question}
+            required={field.isRequired}
+            onChange={(selectedValue, isChecked) =>
+              handleCheckBoxChange(fieldId, selectedValue, isChecked)
+            }
+          />
+        );
       default:
         return null;
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await createResponse({
+        formId: formData._id, 
+        fields: Object.keys(formValues).map((fieldId) => ({
+          fieldType: formData.fields.find((field) => field._id === fieldId)
+            .fieldType,
+          label: formData.fields.find((field) => field._id === fieldId)
+            .question,
+          response: formValues[fieldId],
+        })),
+      });
+      console.log("Server Response:", response);
+      navigate("/");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+
+  const handleCancel = (e) => {
+    e.preventDefault()
+    navigate('/forms')
+  }
   return (
     <div>
-      <div className="flex flex-col bg-gray-300">
-        <div className="h-72 bg-teal-500 sm:h-[122px]" />
-        <div className="mx-auto w-[700px] sm:w-[90%]">
-          <div className="ctrlqFormCard mt-[-180px]">
-            <div className="bg-teal-200 h-2 mx-auto w-2/3" />
-            <div className="text-black p-5">
-              <form className="px-[3rem] sm:px-[2px]">
-                <div className="row">
-                  <div className="input-field col s12">
-                    <h4 className="font-sans font-bold text-4xl sm:text-2xl">
-                      {formData ? formData.title : "Candidate Interview Form"}
-                    </h4>
-                    <p className="font sans text-[15px] py-3">
-                      {formData
-                        ? formData.description
-                        : "Please fill the form carefully."}
-                    </p>
+      {formData ? (
+        <div className="flex flex-col bg-gray-300">
+          <div className="h-72 bg-teal-500 sm:h-[122px]" />
+          <div className="mx-auto w-[700px] sm:w-[90%]">
+            <div className="ctrlqFormCard mt-[-180px]">
+              <div className="bg-teal-200 h-2 mx-auto w-2/3" />
+              <div className="text-black p-5">
+                <form className="px-[3rem] sm:px-[2px]">
+                  <div className="row">
+                    <div className="input-field col s12">
+                      <h4 className="font-sans font-bold text-4xl sm:text-2xl">
+                        {formData.title}
+                      </h4>
+                      <p className="font sans text-[15px] py-3">
+                        {formData.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {formData && formData.fields.map(renderFormField)}
+                  {formData.fields.map((field) => renderFormField(field))}
 
-                <CancelSave
-                  onCancel={() => console.log("")}
-                  onSave={() => console.log("")}
-                  cancelLabel="Cancel"
-                  saveLabel="Save"
-                />
-              </form>
+                  <CancelSave
+                    onCancel={handleCancel}
+                    onSave={handleSubmit} 
+                    cancelLabel="Cancel"
+                    saveLabel="Save"
+                  />
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };

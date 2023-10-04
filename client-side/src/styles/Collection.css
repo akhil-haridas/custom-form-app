@@ -160,26 +160,11 @@ h6,
     line-height: 1.5rem;
 }
 
-p {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
-    font-size: 1rem;
-    letter-spacing: 0.1px;
-    line-height: 1.8;
-    color: #051922;
-    margin: 0 0 1.25rem 0;
-}
 
 p:last-child {
     margin: 0;
 }
 
-/* -----------------------------------------------------------------------------
-
-# All Common Styles
-
-
------------------------------------------------------------------------------ */
 .loader {
     bottom: 0;
     height: 100%;
@@ -206,7 +191,6 @@ p:last-child {
     overflow-x: hidden;
 }
 
-/* Style the label to appear as a toggle switch */
 .checkbox-label {
     display: flex;
     align-items: center;
@@ -256,7 +240,6 @@ p:last-child {
 .checkbox-label:hover .checkbox-custom {
     background-color: #b5b5b5;
 }
-
 .close-modal {
     float: right;
     margin-top: 45px;

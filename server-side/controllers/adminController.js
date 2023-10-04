@@ -20,7 +20,7 @@ exports.getForm = async (req, res) => {
 
 exports.getForms = async (req, res) => {
   try {
-    const forms = await Form.find({}, "title description").lean();
+    const forms = await Form.find({}, "title description _id").lean();
 
     const formsWithResponses = await Promise.all(
       forms.map(async (form) => {
@@ -28,6 +28,7 @@ exports.getForms = async (req, res) => {
           formId: form._id,
         });
         return {
+          _id:form._id,
           title: form.title,
           description: form.description,
           responseCount,
