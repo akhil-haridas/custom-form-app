@@ -2,7 +2,7 @@ import React from "react";
 
 const Breadcrumb = ({ current }) => {
   return (
-    <div className="breadcrumb-section breadcrumb-bg">
+    <div className="breadcrumb-section breadcrumb-bg sm:mt-[-150px] sm:h-0">
       <div className="container">
         <div className="row">
           <div className="col-lg-8 offset-lg-2 text-center">

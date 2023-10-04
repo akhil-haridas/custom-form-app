@@ -90,7 +90,7 @@ const CreatePage = () => {
     <>
       <Head active={"AddForm"} />
       <Breadcrumb current={"ADD NEW FORM"} />
-      <div className="mt-10 mb-150 flex items-center justify-center w-full">
+      <div className="mt-10 mb-150 flex items-center sm:w-full justify-center w-full">
         <form className="w-full max-w-[65%]">
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full px-3">
@@ -151,7 +151,7 @@ const CreatePage = () => {
           <div className="md:flex md:items-center">
             <div className="md:w-1/3">
               <button
-                className={`shadow bg-teal-400 ${"hover:bg-teal-400"} focus:shadow-outline w-[20%] focus:outline-none text-white font-bold py-2 px-4 rounded`}
+                className={`shadow bg-teal-400 ${"hover:bg-teal-400"} focus:shadow-outline sm:w-full w-[20%] focus:outline-none text-white font-bold py-2 px-4 rounded`}
                 type="button"
                 onClick={handleFormSubmit}
               >

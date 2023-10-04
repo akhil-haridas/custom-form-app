@@ -42,7 +42,7 @@ const ListingPage = () => {
         </div>
       </div>
       <Footer />
-      {isLoading && (  <Spinner/>)}
+      {isLoading && <Spinner />}
     </>
   );
 };
