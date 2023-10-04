@@ -24,7 +24,7 @@ const Responses = ({ datas }) => {
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="ms-3">
-                      <p className="fw-bold mb-1">{response.Date}</p>
+                      <p className="fw-bold mb-1">{response.createdAt}</p>
                     </div>
                   </div>
                 </td>

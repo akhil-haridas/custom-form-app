@@ -5,9 +5,12 @@ import { addDocument } from "../../redux/slices/documentSlice";
 import { Toast, fieldTypeOptions } from "../../utils/utils";
 import { nanoid } from "nanoid";
 
-const Adding = ({formFieldsError}) => {
+const Adding = ({formFieldsError,inputChange}) => {
   const dispatch = useDispatch();
 
+    const [errors, setErrors] = useState({
+      optionsRequired: false,
+    });
   const initialState = {
     id: nanoid(),
     fieldType: "text",
@@ -47,6 +50,17 @@ const Adding = ({formFieldsError}) => {
       });
       return;
     }
+        if (
+          ["radio", "select", "checkbox"].includes(formState.fieldType) &&
+          formState.options.length === 0
+        ) {
+          setErrors({ optionsRequired: true });
+          return;
+        } else {
+          setErrors({ optionsRequired: false });
+    }
+    
+    inputChange()
     const newDocument = { ...formState };
     dispatch(addDocument(newDocument));
     setFormState({ ...initialState, id: nanoid() });
@@ -59,6 +73,11 @@ const Adding = ({formFieldsError}) => {
           <h1 className="inline text-2xl font-semibold leading-none">
             Add Fields
           </h1>
+          {errors.optionsRequired && (
+            <p className="text-red-500 text-xs italic">
+              Options are required for selected field type.
+            </p>
+          )}
           {formFieldsError && (
             <p className="text-red-500 text-xs italic">{formFieldsError}</p>
           )}

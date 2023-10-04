@@ -64,8 +64,14 @@ const CreatePage = () => {
       ...formData,
       [name]: value,
     });
+    if (name === "formTitle") {
+      validateForm();
+    }
   };
 
+  const handleAddingInputChange = () => {
+    validateForm()
+  };
   const validateForm = () => {
     const errors = {};
 
@@ -133,7 +139,10 @@ const CreatePage = () => {
           <div className="flex h-full mb-5 pb-5 bg-gray-100">
             <div className="m-auto pt-2 min-w-[75%]">
               <div>
-                <Adding formFieldsError={formErrors.formFields} />
+                <Adding
+                  inputChange={handleAddingInputChange}
+                  formFieldsError={formErrors.formFields}
+                />
                 <Bucket />
               </div>
             </div>

@@ -147,7 +147,7 @@ const FormPage = () => {
   return (
     <div>
       {formData ? (
-        <div className="flex flex-col bg-gray-300 h-[100vh]">
+        <div className="flex flex-col bg-gray-300">
           <div className="h-72 bg-teal-500 sm:h-[122px]" />
           <div className="mx-auto w-[700px] sm:w-[90%]">
             <div className="ctrlqFormCard mt-[-180px]">

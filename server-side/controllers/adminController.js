@@ -11,7 +11,10 @@ exports.getForm = async (req, res) => {
       return res.status(404).json({ error: "Form not found" });
     }
 
-    const responses = await Response.find({ formId }, "fields").lean();
+    const responses = await Response.find(
+      { formId },
+      "fields"
+    ).lean();
 
     res.status(200).json(responses);
   } catch (error) {
