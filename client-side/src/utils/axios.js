@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Toast } from "./admin";
+import { Toast } from "./utils";
 
-const API_BASE_URL = "http://localhost:4000/api";
+const API_BASE_URL = "https://custom-form-app.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -35,7 +35,7 @@ export const createForm = async (formData) => {
 
     Toast.fire({
       icon: "success",
-      title: "Form created successfully", 
+      title: "Form created successfully",
     });
     return response;
   } catch (error) {
@@ -49,8 +49,7 @@ export const createForm = async (formData) => {
 export const getFormDetails = async (formId) => {
   try {
     const response = await api.get(`/user/forms/${formId}`);
-    return response
-    
+    return response;
   } catch (error) {
     throw error;
   }
@@ -58,8 +57,8 @@ export const getFormDetails = async (formId) => {
 
 export const getForms = async () => {
   try {
-    const response = await api.get('/admin/forms');
-    return response
+    const response = await api.get("/admin/forms");
+    return response;
   } catch (error) {
     console.error("Error fetching forms:", error);
   }

@@ -22,13 +22,18 @@ const formFieldSchema = new mongoose.Schema({
   },
 });
 
-const formSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
+const formSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    fields: [formFieldSchema],
   },
-  description: String,
-  fields: [formFieldSchema],
-});
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("Form", formSchema);

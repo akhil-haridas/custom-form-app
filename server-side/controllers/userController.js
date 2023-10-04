@@ -1,6 +1,7 @@
 const Response = require("../models/responseShema");
-const Form = require("../models/formShema")
+const Form = require("../models/formShema");
 
+// Get a single form by ID
 exports.getForm = async (req, res) => {
   try {
     const formId = req.params.id;
@@ -9,6 +10,7 @@ exports.getForm = async (req, res) => {
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
+
     res.status(200).json(form);
   } catch (error) {
     console.error("Error fetching form details:", error);
@@ -16,8 +18,8 @@ exports.getForm = async (req, res) => {
   }
 };
 
+// Create a new response
 exports.createResponse = async (req, res) => {
-
   try {
     const responseData = req.body;
     const userResponse = new Response(responseData);

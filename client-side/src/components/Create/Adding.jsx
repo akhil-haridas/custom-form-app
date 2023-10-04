@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { useDispatch } from "react-redux";
 import { addDocument } from "../../redux/slices/documentSlice";
-import { Toast, fieldTypeOptions } from "../../utils/admin";
+import { Toast, fieldTypeOptions } from "../../utils/utils";
 import { nanoid } from "nanoid";
 
 const Adding = () => {
@@ -41,7 +41,6 @@ const Adding = () => {
 
   const handleSave = () => {
     if (!formState.question || !formState.fieldType) {
-      
       Toast.fire({
         icon: "warning",
         title: "Please fill the label and select field",

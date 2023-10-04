@@ -1,6 +1,7 @@
 const Form = require("../models/formShema");
 const Response = require("../models/responseShema");
 
+// Get a single form by ID
 exports.getForm = async (req, res) => {
   try {
     const formId = req.params.id;
@@ -9,6 +10,7 @@ exports.getForm = async (req, res) => {
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
+
     const responses = await Response.find({ formId }, "fields").lean();
 
     res.status(200).json(responses);
@@ -18,6 +20,7 @@ exports.getForm = async (req, res) => {
   }
 };
 
+// Get a list of forms with response count
 exports.getForms = async (req, res) => {
   try {
     const forms = await Form.find({}, "title description _id").lean();
@@ -28,7 +31,7 @@ exports.getForms = async (req, res) => {
           formId: form._id,
         });
         return {
-          _id:form._id,
+          _id: form._id,
           title: form.title,
           description: form.description,
           responseCount,
@@ -43,15 +46,13 @@ exports.getForms = async (req, res) => {
   }
 };
 
+// Create a new form
 exports.createForm = async (req, res) => {
   try {
     const formData = req.body;
-    console.log(formData)
     const newForm = new Form(formData);
     const savedForm = await newForm.save();
-
     res.status(201).json(savedForm);
-    console.log(savedForm,"SAVE")
   } catch (error) {
     console.error("Error creating form:", error);
     res.status(500).json({ error: "Internal Server Error" });

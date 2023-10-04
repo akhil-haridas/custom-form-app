@@ -16,17 +16,22 @@ const responseFieldSchema = new mongoose.Schema({
   },
 });
 
-const responseSchema = new mongoose.Schema({
-  formId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Form",
+const responseSchema = new mongoose.Schema(
+  {
+    formId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Form",
+    },
+    submittedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    fields: [responseFieldSchema],
   },
-  submittedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  fields: [responseFieldSchema],
-});
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("Response", responseSchema);
