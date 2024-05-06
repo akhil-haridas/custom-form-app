@@ -1,4 +1,4 @@
-...module.exports = {
+....module.exports = {
   mode: "jit",
   content: [
     "./src/**/**/*.{js,ts,jsx,tsx,html,mdx}",
